@@ -1,0 +1,67 @@
+name: Linux
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: master
+    paths:
+    - 'src/**/**'
+    - '!**.md'
+  pull_request:
+    branches: master
+    paths:
+    - 'src/**/**'
+    - '!/**.md'
+
+jobs:
+  build:
+    name: ${{ matrix.build.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        build:
+          - name: ubuntu-22.04-gcc-
+            os: ubuntu-22.04
+            cc: gcc
+          #- name: ubuntu-22.04-clang
+            #os: ubuntu-22.04
+            #cc: clang
+
+    runs-on: ${{ matrix.build.os }}
+    container: ${{ matrix.build.container }}
+    env:
+      CC: '${{ matrix.build.cc }}'
+      NETPANZER_DATADIR: ${{ github.workspace }}/data
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: false
+
+    - if: ${{ env.CC }}
+      run: |
+        if [ "$CC" = "gcc" ]; then
+          CXX=g++
+        else
+          CXX=clang++
+        fi
+        echo "CXX=${CXX}" >> $GITHUB_ENV
+
+    - name: Show info
+      run: |
+        export -p
+        echo '${{ toJSON(matrix) }}'
+
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt upgrade -y
+        sudo apt install -y \
+          libclanlib-dev \
+          ruby-dev \
+          scons
+
+      name: Build with scons
+      run: |
+        scons
