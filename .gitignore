@@ -1,2 +1,6 @@
 *.o
 /.sconsign.dblite
+*.a
+/netpanzer/netpanzer.os
+/netpanzer/netpanzer_wrap.cpp
+/netpanzer/netpanzer_wrap.tmp.cpp
