@@ -1,7 +1,8 @@
 ##  $Id$
-## 
+##
 ##  Flexlay - A Generic 2D Game Editor
 ##  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
+##  Copyright (C) 2024 The NetPanzer Team (https://github.com/netpanzer/)
 ##
 ##  This program is free software; you can redistribute it and/or
 ##  modify it under the terms of the GNU General Public License
@@ -12,7 +13,7 @@
 ##  but WITHOUT ANY WARRANTY; without even the implied warranty of
 ##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ##  GNU General Public License for more details.
-## 
+##
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program; if not, write to the Free Software
 ##  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -27,7 +28,7 @@ class Config:
     config = None
     datadir = None
     recent_files = []
-    
+
     def __init__(self):
         self.config = ConfigParser.ConfigParser()
 
@@ -41,13 +42,13 @@ class Config:
         self.datadir      = self.config.get("netPanzer", "datadir")
         str = self.config.get("netPanzer", "recent_files")
         self.recent_files = eval(str)
-        
+
     def __del__(self):
         self.config.set("netPanzer", "datadir", self.datadir)
         self.config.set("netPanzer", "recent_files", self.recent_files)
-        print "Writing config",
+        print ("Writing config"),
         self.config.write(open(os.path.expanduser('~/.flexlay/netpanzer.cfg'), 'w'))
-        print "Writing Done"
+        print ("Writing Done")
 
 class Level:
     filename  = None
@@ -74,7 +75,7 @@ class Level:
 
     def save_optfile(self, filename):
         outpots = [] # FIXME
-        
+
         f = open(filename, "w")
         f.write("ObjectiveCount: %d\n\n" % len(outposts))
         for (name, x , y) in outpots:
@@ -153,7 +154,7 @@ def on_map_change():
     if (workspace.get_map().redo_stack_size() > 0):
         redo_icon.enable()
     else:
-        redo_icon.disable()        
+        redo_icon.disable()
 
 startlevel = Level(256, 256)
 startlevel.activate(workspace)
@@ -177,18 +178,18 @@ def gui_level_save():
         save_dialog.set_filename(workspace.get_map().get_metadata().filename)
     else:
         save_dialog.set_filename(os.path.dirname(save_dialog.get_filename())  + "/")
-        
+
     save_dialog.run(netpanzer_save_level)
-   
+
 def gui_level_load():
     load_dialog.run(netpanzer_load_level)
 
 class Counter:
     counter = 0;
-    
+
     def __init__(self, i):
         self.counter = i
-        
+
     def inc(self, i):
         self.counter += i
         return self.counter
@@ -234,7 +235,7 @@ def gui_toggle_grid():
         grid_icon.set_down()
     else:
         grid_icon.set_up()
-        
+
 grid_icon = Icon(CL_Rect(CL_Point(p.inc(48), 2), CL_Size(32, 32)),
                  make_sprite("../data/images/icons24/grid.png"), "Some tooltip", button_panel);
 grid_icon.set_callback(gui_toggle_grid)
@@ -256,7 +257,7 @@ def set_tilemap_select_tool():
     zoom.set_up()
     object.set_up()
 #    supertux.show_none()
-    
+
 def set_zoom_tool():
     workspace.set_tool(zoom_tool.to_tool())
     paint.set_up()
@@ -264,7 +265,7 @@ def set_zoom_tool():
     zoom.set_down()
     object.set_up()
 #    supertux.show_none()
-    
+
 def set_objmap_select_tool():
     workspace.set_tool(objmap_select_tool.to_tool())
     paint.set_up()
@@ -298,7 +299,7 @@ def netpanzer_load_level(filename):
     level = Level(filename)
     level.activate(workspace)
     connect(level.editormap.sig_change(), on_map_change)
-    
+
     if not(has_element(config.recent_files, filename)):
         config.recent_files.append(filename)
         recent_files_menu.add_item(mysprite, filename, lambda: netpanzer_load_level(filename))
@@ -332,7 +333,7 @@ def gui_set_zoom(zoom):
 
 menu.add_item("Zoom/1:4 (25%) ",  lambda: gui_set_zoom(0.25))
 menu.add_item("Zoom/1:2 (50%) ",  lambda: gui_set_zoom(0.5))
-menu.add_item("Zoom/1:1 (100%) ", lambda: gui_set_zoom(1.0)) 
+menu.add_item("Zoom/1:1 (100%) ", lambda: gui_set_zoom(1.0))
 menu.add_item("Zoom/2:1 (200%) ", lambda: gui_set_zoom(2.0))
 menu.add_item("Zoom/4:1 (400%) ", lambda: gui_set_zoom(4.0))
 
@@ -351,6 +352,6 @@ gui.run()
 del config
 
 flexlay.deinit()
-print "deinit done"
+print ("deinit done")
 
 # EOF #
