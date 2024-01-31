@@ -3,6 +3,7 @@
 ##
 ##  Flexlay - A Generic 2D Game Editor
 ##  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
+##  Copyright (C) 2024 The NetPanzer Team (https://github.com/netpanzer/)
 ##
 ##  This program is free software; you can redistribute it and/or
 ##  modify it under the terms of the GNU General Public License
@@ -26,11 +27,12 @@ Import('clanLib_env')
 
 opts = Variables('custom.py')
 opts.Add('CXX', 'The C++ compiler.', 'g++')
-opts.Add('CXXFLAGS', 'The C++ compiler flags.', '-g -O2 -Wall -fPIC')
+opts.Add('RUBYINCLUDEDIR', 'Includes for Ruby', os.popen('ruby -rrbconfig -e \'puts RbConfig::CONFIG["rubyhdrdir"]\'').read()[:-1])
+opts.Add('RUBYARCHINCLUDEDIR', 'Architecture-specific includes', os.popen('ruby -rrbconfig -e \'puts RbConfig::CONFIG["rubyarchhdrdir"]\'').read()[:-1])
+opts.Add('CXXFLAGS', 'The C++ compiler flags.', '-g -O2 -Wall -fPIC -I$RUBYINCLUDEDIR -I$RUBYARCHINCLUDEDIR')
 opts.Add('CPPPATH', 'additional header path', '')
 opts.Add('LIBPATH', 'additional library path', '')
-opts.Add('RUBYDIR', 'Ruby directory', os.popen('ruby -e "require \'rbconfig\'; puts Config::CONFIG[\'archdir\']"').read()[:-1])
-
+opts.Add('RUBYDIR', 'Ruby directory', os.popen('ruby -rrbconfig -e \'puts RbConfig::CONFIG["archdir"]\'').read()[:-1])
 opts.Add('DESTDIR', 'destination directory which gets appended to PREFIX', '')
 opts.Add('PREFIX',  'PREFIX, ie. /usr/local', '/usr/local')
 
@@ -71,7 +73,7 @@ flexlay_ruby_lib = libflexlay_ruby_env.SharedLibrary(
     LINKFLAGS = clanLib_env['LINKFLAGS'],
     LIBPATH=['../lib', '.'] + clanLib_env['LIBPATH'],
     LIBS=['flexlay'] + clanLib_env['LIBS'],
-    CXXFLAGS="-Wno-uninitialized")
+    CXXFLAGS="-Wno-uninitialized -I$RUBYINCLUDEDIR -I$RUBYARCHINCLUDEDIR")
 
 # install_ruby = env.Alias('install_headers', Install(env['DESTDIR'] + env['PREFIX'] + '/include/flexlay', flexlay_headers))
 # env.Alias('install', [install_ruby])
