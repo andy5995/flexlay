@@ -8,3 +8,4 @@
 /netpanzer/netpanzer_wrap.so
 /ruby/flexlay_ruby_wrap.cpp
 /ruby/flexlay_ruby_wrap.os
+/ruby/ruby_functor.os
