@@ -8,7 +8,7 @@ on:
     branches: main
     paths:
     - '**'
-    - '**c-cpp.yml'
+    - '**/c-cpp.yml'
     - '!**.yml'
     - '!**.md'
   pull_request:
