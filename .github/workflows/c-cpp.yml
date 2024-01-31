@@ -8,16 +8,16 @@ on:
     branches: main
     paths:
     - '**'
-    - '**/c-cpp.yml'
     - '!**.yml'
     - '!**.md'
+    - '**/c-cpp.yml'
   pull_request:
     branches: main
     paths:
     - '**'
-    - '**c-cpp.yml'
     - '!**.yml'
     - '!/**.md'
+    - '**/c-cpp.yml'
 
 jobs:
   build:
