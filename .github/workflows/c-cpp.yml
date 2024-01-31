@@ -66,6 +66,6 @@ jobs:
           ruby-dev \
           scons
 
-      name: Build with scons
+    - name: Build with scons
       run: |
         scons
