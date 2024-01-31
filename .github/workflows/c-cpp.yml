@@ -60,8 +60,10 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
+        sudo apt remove -y firefox
         sudo apt upgrade -y
         sudo apt install -y \
+          libboost-dev \
           libclanlib-dev \
           ruby-dev \
           scons
